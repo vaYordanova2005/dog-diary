@@ -1,0 +1,146 @@
+// The Dog Diary — database schema
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// A clinic staff member who logs in (login with a username, not an email)
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  username     String   @unique
+  passwordHash String
+  role         Role     @default(INTERN)
+  createdAt    DateTime @default(now())
+}
+
+// ADMIN = developer only (local/dev use).
+// DOCTOR = full access (the clinic's real administrators).
+// INTERN = everything except deleting records.
+enum Role {
+  ADMIN
+  DOCTOR
+  INTERN
+}
+
+// Dog owner
+model Owner {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String?
+  email     String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  dogs Dog[]
+}
+
+// Dog profile
+model Dog {
+  id        String    @id @default(cuid())
+  name      String
+  species   String    @default("Dog")
+  breed     String?
+  gender    Gender    @default(UNKNOWN)
+  birthDate DateTime?
+  weightKg  Float?
+  chipNumber String?
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  ownerId String
+  owner   Owner @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  medicalRecords MedicalRecord[]
+  vaccinations   Vaccination[]
+  medications    Medication[]
+  attachments    Attachment[]
+  attachmentFolders AttachmentFolder[]
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  UNKNOWN
+}
+
+// Medical examination / manipulation / procedure
+model MedicalRecord {
+  id          String   @id @default(cuid())
+  date        DateTime @default(now())
+  title       String
+  description String?
+  vetName     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  dogId String
+  dog   Dog    @relation(fields: [dogId], references: [id], onDelete: Cascade)
+}
+
+// Vaccination
+model Vaccination {
+  id          String    @id @default(cuid())
+  name        String
+  dateGiven   DateTime
+  nextDueDate DateTime?
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  dogId String
+  dog   Dog    @relation(fields: [dogId], references: [id], onDelete: Cascade)
+}
+
+// Prescribed medication
+model Medication {
+  id        String    @id @default(cuid())
+  name      String
+  dosage    String?
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  dogId String
+  dog   Dog    @relation(fields: [dogId], references: [id], onDelete: Cascade)
+}
+
+// Attached file (photo, PDF, Word) — the file itself is in Cloudinary, only the link is here
+model Attachment {
+  id           String   @id @default(cuid())
+  name         String
+  url          String
+  publicId     String
+  resourceType String
+  bytes        Int
+  createdAt    DateTime @default(now())
+
+  dogId String
+  dog   Dog    @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  // Folder (optional). When the folder is deleted, the files are left without a folder.
+  folderId String?
+  folder   AttachmentFolder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+}
+
+// Folder for grouping the files of one animal (e.g. “X-rays”)
+model AttachmentFolder {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  dogId String
+  dog   Dog    @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  attachments Attachment[]
+}
