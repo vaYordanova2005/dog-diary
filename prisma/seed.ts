@@ -31,8 +31,8 @@ const demoAnimals = [
       notes: "Friendly, but nervous at the vet's. Allergic to chicken-based food.",
     },
     records: [
-      { date: daysFromNow(-20), title: "Annual check-up", vetName: "Dr. Taylor", description: "Healthy overall. Teeth in good condition. Weight stable." },
-      { date: daysFromNow(-210), title: "Ear infection", vetName: "Dr. Taylor", description: "Right ear cleaned and drops prescribed. Follow-up in two weeks." },
+      { date: daysFromNow(-20), title: "Annual check-up", vetName: "Taylor", description: "Healthy overall. Teeth in good condition. Weight stable." },
+      { date: daysFromNow(-210), title: "Ear infection", vetName: "Taylor", description: "Right ear cleaned and drops prescribed. Follow-up in two weeks." },
     ],
     vaccinations: [
       { name: "Rabies", dateGiven: daysFromNow(-20), nextDueDate: daysFromNow(345), notes: "Booster every year." },
@@ -55,7 +55,7 @@ const demoAnimals = [
       notes: "Indoor cat.",
     },
     records: [
-      { date: daysFromNow(-60), title: "Spay surgery", vetName: "Dr. Taylor", description: "Routine procedure, no complications. Stitches removed after 10 days." },
+      { date: daysFromNow(-60), title: "Spay surgery", vetName: "Taylor", description: "Routine procedure, no complications. Stitches removed after 10 days." },
     ],
     vaccinations: [
       { name: "FVRCP", dateGiven: daysFromNow(-60), nextDueDate: daysFromNow(305), notes: null },
@@ -77,8 +77,8 @@ const demoAnimals = [
       notes: "Hip dysplasia — keep exercise moderate.",
     },
     records: [
-      { date: daysFromNow(-8), title: "Joint check", vetName: "Dr. Patel", description: "X-rays taken. Mild progression of hip dysplasia; continue joint supplement." },
-      { date: daysFromNow(-300), title: "Dental cleaning", vetName: "Dr. Patel", description: "Scaling and polishing under anaesthesia." },
+      { date: daysFromNow(-8), title: "Joint check", vetName: "Patel", description: "X-rays taken. Mild progression of hip dysplasia; continue joint supplement." },
+      { date: daysFromNow(-300), title: "Dental cleaning", vetName: "Patel", description: "Scaling and polishing under anaesthesia." },
     ],
     vaccinations: [
       { name: "Rabies", dateGiven: daysFromNow(-100), nextDueDate: daysFromNow(265), notes: null },
@@ -101,7 +101,7 @@ const demoAnimals = [
       notes: "Eats hay and fresh greens only.",
     },
     records: [
-      { date: daysFromNow(-45), title: "Nail trimming and health check", vetName: "Dr. Taylor", description: "All fine." },
+      { date: daysFromNow(-45), title: "Nail trimming and health check", vetName: "Taylor", description: "All fine." },
     ],
     vaccinations: [
       { name: "Myxomatosis", dateGiven: daysFromNow(-150), nextDueDate: daysFromNow(215), notes: null },
@@ -121,7 +121,7 @@ const demoAnimals = [
       notes: "Puppy — vaccination series in progress.",
     },
     records: [
-      { date: daysFromNow(-30), title: "First puppy visit", vetName: "Dr. Patel", description: "Deworming given. Feeding and training advice discussed." },
+      { date: daysFromNow(-30), title: "First puppy visit", vetName: "Patel", description: "Deworming given. Feeding and training advice discussed." },
     ],
     vaccinations: [
       { name: "DHPP (puppy series)", dateGiven: daysFromNow(-30), nextDueDate: daysFromNow(-2), notes: "Second dose was due two days ago." },

@@ -7,6 +7,12 @@ and when the next vaccination is due.
 > This is the English, demo version of a project I built for a real clinic.
 > It runs on its own database with made-up animals and owners — no real data.
 
+**Live demo:** https://dog-diary-alpha.vercel.app/ — click "Continue as doctor" and use the password `doctor123`.
+
+![Animal list](docs/screenshots/animal-list.jpg)
+
+![Animal profile with examinations and vaccinations](docs/screenshots/animal-profile.jpg)
+
 ## Features
 
 - **Animal list** — search while typing (name, species, breed, owner) and filter by species, breed and gender.
