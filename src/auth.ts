@@ -4,6 +4,7 @@ import { encode as defaultEncode } from "next-auth/jwt";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { authConfig } from "@/auth.config";
+import { DEMO_USERNAMES, isDemoMode } from "@/lib/demo";
 
 // If "Remember me" is unchecked, the session expires after a few hours instead
 // of the standard 30 days (see jwt.encode below).
@@ -17,13 +18,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         username: {},
         password: {},
         remember: {},
+        demo: {},
       },
       authorize: async (credentials) => {
         const username = credentials?.username as string | undefined;
         const password = credentials?.password as string | undefined;
         const remember = credentials?.remember !== "false";
 
-        if (!username || !password) return null;
+        // One-click demo login: only when DEMO_MODE is on, and only for the demo accounts
+        const demoLogin =
+          credentials?.demo === "true" &&
+          isDemoMode() &&
+          !!username &&
+          DEMO_USERNAMES.includes(username.trim().toLowerCase());
+
+        if (!username || (!password && !demoLogin)) return null;
 
         // Upper/lower case in the username doesn't matter
         const user = await prisma.user.findFirst({
@@ -31,8 +40,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
         if (!user) return null;
 
-        const passwordsMatch = await bcrypt.compare(password, user.passwordHash);
-        if (!passwordsMatch) return null;
+        if (!demoLogin) {
+          const passwordsMatch = await bcrypt.compare(password!, user.passwordHash);
+          if (!passwordsMatch) return null;
+        }
 
         return {
           id: user.id,

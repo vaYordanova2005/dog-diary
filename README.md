@@ -7,11 +7,7 @@ and when the next vaccination is due.
 > This is the English, demo version of a project I built for a real clinic.
 > It runs on its own database with made-up animals and owners — no real data.
 
-**Live demo:** https://dog-diary-alpha.vercel.app/ — click "Continue as doctor" and use the password `doctor123`.
-
-![Animal list](docs/screenshots/animal-list.jpg)
-
-![Animal profile with examinations and vaccinations](docs/screenshots/animal-profile.jpg)
+**Live demo:** https://dog-diary-alpha.vercel.app/ — no sign-up and no password: click "Continue as doctor" or "Continue as intern".
 
 ## Features
 
@@ -22,7 +18,7 @@ and when the next vaccination is due.
 - **Accounts and roles** — username + password login, with a "remember me" option and a page to change your own password.
   - `DOCTOR` — full access.
   - `INTERN` — can add and edit, but cannot delete anything. This is enforced both in the UI and in the server actions.
-- **Quick demo login** — one-click "Continue as doctor / intern" buttons on the login page.
+- **One-click demo login** — with `DEMO_MODE="true"`, the login page shows "Continue as doctor / intern" buttons that sign in without a password. It only ever works for those two demo accounts, and only when the flag is set.
 
 ## Tech stack
 
@@ -50,6 +46,7 @@ A few things I'm happy with:
    DATABASE_URL="postgresql://...neon.tech/...?sslmode=require&uselibpqcompat=true"
    AUTH_SECRET="..."            # e.g. output of: npx auth secret
    # REGISTRATION_CODE="..."    # optional: enables /register in production
+   DEMO_MODE="true"             # one-click login for the demo accounts (no password)
 
    # Optional — only needed for photo/document uploads
    # CLOUDINARY_CLOUD_NAME="..."
@@ -57,15 +54,15 @@ A few things I'm happy with:
    # CLOUDINARY_API_SECRET="..."
    ```
 3. `npx prisma migrate deploy` — applies the migrations.
-4. `npm run seed` — creates the demo accounts and a few made-up animals (safe to re-run).
+4. `npm run seed` — creates the `doctor` and `intern` demo accounts and a few made-up animals (safe to re-run). The accounts get a random password nobody knows; with `DEMO_MODE="true"` you sign in with the one-click buttons.
 5. `npm run dev` — starts the app at http://localhost:3000
 
 ### Demo accounts
 
-| Role | Username | Password |
-|---|---|---|
-| Doctor | `doctor` | `doctor123` |
-| Intern | `intern` | `intern123` |
+| Role | What it can do |
+|---|---|
+| Doctor | Everything, including deleting records |
+| Intern | Add and edit, but not delete |
 
 ## Commands
 
@@ -80,8 +77,8 @@ A few things I'm happy with:
 ## Deployment (Vercel)
 
 Every push to `main` deploys automatically. Vercel needs `DATABASE_URL` and
-`AUTH_SECRET`, optionally `REGISTRATION_CODE`, and the three `CLOUDINARY_*`
-variables if file uploads should work.
+`AUTH_SECRET`, `DEMO_MODE="true"` for a public demo, optionally `REGISTRATION_CODE`,
+and the three `CLOUDINARY_*` variables if file uploads should work.
 
 New migrations are written by hand as a folder in `prisma/migrations/` and
 applied with `npx prisma migrate deploy`, because `prisma migrate dev`

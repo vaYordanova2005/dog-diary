@@ -4,6 +4,7 @@ import Link from "next/link";
 import "./globals.css";
 import { auth, signOut } from "@/auth";
 import { Logo } from "@/components/Logo";
+import { isDemoMode } from "@/lib/demo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,9 +53,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                     </span>
                   )}
                 </span>
-                <Link href="/password" className="hover:text-zinc-900 hover:underline">
-                  Change password
-                </Link>
+                {!isDemoMode() && (
+                  <Link href="/password" className="hover:text-zinc-900 hover:underline">
+                    Change password
+                  </Link>
+                )}
                 <form
                   action={async () => {
                     "use server";

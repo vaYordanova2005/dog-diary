@@ -2,14 +2,16 @@ import "dotenv/config";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
+import { randomBytes } from "node:crypto";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
-// Demo accounts — the login page has one-click buttons for the doctor and intern.
+// Demo accounts. They get a random password nobody knows: visitors sign in with the
+// one-click buttons on the login page, which work when DEMO_MODE="true" is set.
 const accounts = [
-  { username: "doctor", name: "Doctor", password: "doctor123", role: "DOCTOR" as const },
-  { username: "intern", name: "Intern", password: "intern123", role: "INTERN" as const },
+  { username: "doctor", name: "Doctor", role: "DOCTOR" as const },
+  { username: "intern", name: "Intern", role: "INTERN" as const },
 ];
 
 // Dates are relative to "now" so the demo always has an overdue and an upcoming vaccination.
@@ -156,7 +158,7 @@ async function createAccounts() {
       continue;
     }
 
-    const passwordHash = await bcrypt.hash(account.password, 10);
+    const passwordHash = await bcrypt.hash(randomBytes(24).toString("hex"), 10);
 
     await prisma.user.create({
       data: {

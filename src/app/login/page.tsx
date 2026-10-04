@@ -4,6 +4,7 @@ import { AuthError } from "next-auth";
 import { signIn } from "@/auth";
 import { LoginForm } from "@/components/LoginForm";
 import { Logo } from "@/components/Logo";
+import { isDemoMode } from "@/lib/demo";
 
 async function login(formData: FormData) {
   "use server";
@@ -11,11 +12,13 @@ async function login(formData: FormData) {
   const username = String(formData.get("username") ?? "");
   const password = String(formData.get("password") ?? "");
   const remember = formData.get("remember") === "on";
+  const demo = formData.get("demo") === "true";
 
   try {
     await signIn("credentials", {
       username,
       password,
+      demo: demo ? "true" : "false",
       remember: remember ? "true" : "false",
       redirect: false,
     });
@@ -57,9 +60,9 @@ export default async function LoginPage({
           </p>
         )}
 
-        <LoginForm action={login} />
+        <LoginForm action={login} demoMode={isDemoMode()} />
 
-        {registrationOpen && (
+        {registrationOpen && !isDemoMode() && (
         <p className="mt-6 text-sm text-zinc-500">
           Don&apos;t have an account?{" "}
           <Link href="/register" className="font-medium text-[#f19c47] hover:underline">

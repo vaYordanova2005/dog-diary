@@ -15,10 +15,31 @@ const bigButtonClass =
 
 export function LoginForm({
   action,
+  demoMode = false,
 }: {
   action: (formData: FormData) => void | Promise<void>;
+  demoMode?: boolean;
 }) {
   const [mode, setMode] = useState<Mode>("select");
+
+  // Demo mode: one click signs in, no password. The server ignores the "demo" flag
+  // unless DEMO_MODE is on (see src/lib/demo.ts).
+  if (demoMode) {
+    return (
+      <form action={action} className="flex flex-col gap-3">
+        <input type="hidden" name="demo" value="true" />
+        <button type="submit" name="username" value="doctor" className={bigButtonClass}>
+          Continue as doctor
+        </button>
+        <button type="submit" name="username" value="intern" className={bigButtonClass}>
+          Continue as intern
+        </button>
+        <p className="mt-2 text-xs text-zinc-500">
+          Demo with made-up data. Doctors can delete records, interns cannot.
+        </p>
+      </form>
+    );
+  }
 
   if (mode === "select") {
     return (
